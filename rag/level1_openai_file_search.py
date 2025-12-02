@@ -3,7 +3,7 @@ from openai import OpenAI
 
 load_dotenv(); client = OpenAI()
 
-vs_id = "YOUR_VECTOR_STORE_ID"
+vs_id = "vs_68fca6e7bdd081918701b37b762420aa"
 
 def ask(q):
     r = client.responses.create(
@@ -12,4 +12,4 @@ def ask(q):
     )
     return r.output[-1].content[0].text
 
-print(ask("when will i learn to automate my job in this program?"))
+print(ask("Will i learn RAG?"))

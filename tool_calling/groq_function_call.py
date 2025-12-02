@@ -2,7 +2,6 @@
 
 import os
 import json
-import requests
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -14,38 +13,18 @@ client = Groq(
 )
 
 
-# 1. Define Function to fetch context
+# 2. Define Function to fetch context
 
 # Get the current weather
 def get_current_weather(location):
-    """Get the current weather in a given location using OpenWeatherMap API"""
-    # OpenWeatherMap API configuration
-    api_key = os.getenv("OPENWEATHER_API_KEY")
-    
-    try:
-        # Use the Current Weather API endpoint instead of OneCall
-        weather_url = f"http://api.openweathermap.org/data/2.5/weather?q={location}&units=metric&appid={api_key}"
-        
-        weather_response = requests.get(weather_url)
-        weather_response.raise_for_status()
-        weather_data = weather_response.json()
-        
-        # Extract relevant weather information
-        weather = {
-            "location": location,
-            "temperature": weather_data['main']['temp'],
-            "feels_like": weather_data['main']['feels_like'],
-            "humidity": weather_data['main']['humidity'],
-            "pressure": weather_data['main']['pressure'],
-            "wind_speed": weather_data['wind']['speed'],
-            "description": weather_data['weather'][0]['description'],
-            "icon": weather_data['weather'][0]['icon']
-        }
-        
-        return json.dumps(weather)
-        
-    except requests.exceptions.RequestException as e:
-        return json.dumps({"error": f"API Error: {str(e)}"})
+    """Get the current weather in a given location"""
+    weather = {
+        "location": location,
+        "temperature": "50",
+    }
+
+
+    return json.dumps(weather)
 
 
 # ### Define Functions
@@ -78,17 +57,15 @@ tools = [
 ]
 
 
-
+#LLM
 response = client.chat.completions.create(
-    model="llama3-70b-8192",
+    model="openai/gpt-oss-20b",
     messages=[
         {
             "role": "user",
             "content": "What is the weather like in Bengaluru?",
         }
     ],
-    temperature=0,
-    max_tokens=300,
     tools=tools,
     tool_choice="auto"
 )
